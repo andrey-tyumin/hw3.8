@@ -6,7 +6,19 @@
 
 Перед закрытием соединения, оно переодит в состояние  
 TIME-WAIT = 2MSL(maximum segment lifetime - время ожидания перед закрытием соединения(по RFC1122=2 min).  
-MSL - макс. время в течении которого дейтаграмма IP может оставаться в сети. 
+MSL - макс. время в течении которого дейтаграмма IP может оставаться в сети.  
+Пояснение:  
+Пункт 4.11 LVS-HOWTO: http://www.austintek.com/LVS/LVS-HOWTO/HOWTO/LVS-HOWTO.ipvsadm.html#ActiveConn  
+В выводе ipvsadm присутствуют следующие статусы соединений:  
+
+   > ActiveConn - in ESTABLISHED state  
+   > InActConn - any other state   
+
+т.е. соединение в состоянии TIME-WAIT будет отображено в колонке InActConn.  
+Пояснение 2:  
+Эти соединения(в нашем случае) будут отображаться в течении времени timeout(TIME-WAIT).  
+В случае когда все хорошо:  
+> Services like http (in non-persistent i.e. HTTP /1.0 mode) or ftp-data(port 20) which close the connections as soon as the hit/data (html page, or gif etc) has >been retrieved (<1sec). You're unlikely to see anything in the ActiveConn column with these LVS'ed services. You'll see an entry in the InActConn column untill >the connection times out. If you're getting 1000connections/sec and it takes 60secs for the connection to time out (the normal timeout), then you'll have 60,000 >InActConns. This number of InActConn is quite normal. If you are running an e-commerce site with 300secs of persistence, you'll have 300,000 InActConn entries. >Each entry takes 128bytes (300,000 entries is about 40M of memory, make sure you have enough RAM for your application). The number of ActiveConn might be very >small. 
 
 ---
 
