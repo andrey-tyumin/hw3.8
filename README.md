@@ -20,6 +20,7 @@ MSL - макс. время в течении которого дейтаграм
 В случае когда все хорошо:  
 > Services like http (in non-persistent i.e. HTTP /1.0 mode) or ftp-data(port 20) which close the connections as soon as the hit/data (html page, or gif etc) has >been retrieved (<1sec). You're unlikely to see anything in the ActiveConn column with these LVS'ed services. You'll see an entry in the InActConn column untill >the connection times out. If you're getting 1000connections/sec and it takes 60secs for the connection to time out (the normal timeout), then you'll have 60,000 >InActConns. This number of InActConn is quite normal. If you are running an e-commerce site with 300secs of persistence, you'll have 300,000 InActConn entries. >Each entry takes 128bytes (300,000 entries is about 40M of memory, make sure you have enough RAM for your application). The number of ActiveConn might be very >small. 
 
+
 ---
 
 2. На лекции мы познакомились отдельно с ipvs и отдельно с keepalived.  
@@ -196,5 +197,7 @@ TCP  172.28.128.200:80                  50      300        0    19950        0
 3 балансировщика в активном режиме (то есть не 2 адреса на 3 хоста, один из которых  
 в обычное время простаивает).  
 
-Мне кажется 2 VIP должно хватить. При отказе одного из хостов "упавший" VIP переезжает  
-на BACKUP сервер, и система продолжает работу с двумя VIP, и общим трафиком до 2Гбит/с.
+3 балансировщика в активном режиме должны использавать минимум 3 адреса.  
+При входящем трафике 1,5 Гбит/с отказ одного из балансировщиков не приведет  
+к замедлению обслуживания запросов.  
+Ответ: 3.  
